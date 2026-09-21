@@ -19,4 +19,6 @@ export * from './browser-utils.js';
 export * from './companion-reg-client-utils.js';
 export * from './identity-change-handler.js';
 export * from './stanza-ack.js';
+export * from './modern-messages.js';
+export * from './newsletter-status.js';
 //# sourceMappingURL=index.d.ts.map

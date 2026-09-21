@@ -1,4 +1,5 @@
 import type { UserFacingSocketConfig } from '../Types/index.js';
+import type { NewsletterStatusFetchOptions, NewsletterStatusList, NewsletterStatusSendOptions, NewsletterStatusSendResult, NewsletterStatusStanzaResult, NewsletterStatusUpdatesFetchOptions } from '../Utils/newsletter-status.js';
 declare const makeWASocket: (config: UserFacingSocketConfig) => {
     communityMetadata: (jid: string) => Promise<import("../index.js").GroupMetadata>;
     communityCreate: (subject: string, body: string) => Promise<import("../index.js").GroupMetadata | null>;
@@ -117,6 +118,55 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
     newsletterChangeOwner: (jid: string, newOwnerJid: string) => Promise<void>;
     newsletterDemote: (jid: string, userJid: string) => Promise<void>;
     newsletterDelete: (jid: string) => Promise<void>;
+    newsletterMyAddOns: (options?: {
+        limit?: number;
+        jid?: string;
+    }) => Promise<{
+        jid: string | undefined;
+        messages: {
+            serverId: number | undefined;
+            reaction?: {
+                code: string | undefined;
+                t: number | undefined;
+            };
+            pollVote?: {
+                t: number | undefined;
+                hashes: string[];
+            };
+        }[];
+    }[]>;
+    newsletterStatusMyAddOns: (options?: {
+        limit?: number;
+        jid?: string;
+    }) => Promise<{
+        jid: string | undefined;
+        messages: {
+            serverId: number | undefined;
+            reaction?: {
+                code: string | undefined;
+                t: number | undefined;
+            };
+            pollVote?: {
+                t: number | undefined;
+                hashes: string[];
+            };
+        }[];
+    }[]>;
+    newsletterCanPostStatus: (jid: string) => Promise<{
+        canPost: boolean;
+        canPostMusic: boolean;
+        capabilities: string[];
+    }>;
+    /** Added from Elaina Baileys: post a status update to a WhatsApp Channel (newsletter). */
+    sendNewsletterStatus: (jid: string, content: import("../index.js").AnyMessageContent, options?: NewsletterStatusSendOptions) => Promise<NewsletterStatusSendResult>;
+    /** Added from Elaina Baileys: react to (or, with no reaction, revoke your reaction to) a newsletter status. */
+    sendNewsletterStatusReaction: (jid: string, parentServerId: string | number, reaction: string, options?: Pick<NewsletterStatusSendOptions, 'messageId' | 'ackTimeoutMs'>) => Promise<NewsletterStatusStanzaResult>;
+    /** Added from Elaina Baileys: revoke (delete) a newsletter status you posted, as an admin. */
+    revokeNewsletterStatus: (jid: string, statusId: string, options?: Pick<NewsletterStatusSendOptions, 'ackTimeoutMs'>) => Promise<NewsletterStatusStanzaResult>;
+    /** Added from Elaina Baileys: fetch statuses currently posted to a newsletter/channel. */
+    getNewsletterStatuses: (jid: string, options?: NewsletterStatusFetchOptions) => Promise<NewsletterStatusList>;
+    /** Added from Elaina Baileys: fetch incremental newsletter status updates. */
+    getNewsletterStatusUpdates: (jid: string, options?: NewsletterStatusUpdatesFetchOptions) => Promise<NewsletterStatusList>;
     groupMetadata: (jid: string) => Promise<import("../index.js").GroupMetadata>;
     groupCreate: (subject: string, participants: string[]) => Promise<import("../index.js").GroupMetadata>;
     groupLeave: (id: string) => Promise<void>;

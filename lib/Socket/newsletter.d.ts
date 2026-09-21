@@ -24,6 +24,45 @@ export declare const makeNewsletterSocket: (config: SocketConfig) => {
     newsletterChangeOwner: (jid: string, newOwnerJid: string) => Promise<void>;
     newsletterDemote: (jid: string, userJid: string) => Promise<void>;
     newsletterDelete: (jid: string) => Promise<void>;
+    newsletterMyAddOns: (options?: {
+        limit?: number;
+        jid?: string;
+    }) => Promise<{
+        jid: string | undefined;
+        messages: {
+            serverId: number | undefined;
+            reaction?: {
+                code: string | undefined;
+                t: number | undefined;
+            };
+            pollVote?: {
+                t: number | undefined;
+                hashes: string[];
+            };
+        }[];
+    }[]>;
+    newsletterStatusMyAddOns: (options?: {
+        limit?: number;
+        jid?: string;
+    }) => Promise<{
+        jid: string | undefined;
+        messages: {
+            serverId: number | undefined;
+            reaction?: {
+                code: string | undefined;
+                t: number | undefined;
+            };
+            pollVote?: {
+                t: number | undefined;
+                hashes: string[];
+            };
+        }[];
+    }[]>;
+    newsletterCanPostStatus: (jid: string) => Promise<{
+        canPost: boolean;
+        canPostMusic: boolean;
+        capabilities: string[];
+    }>;
     groupMetadata: (jid: string) => Promise<import("../index.js").GroupMetadata>;
     groupCreate: (subject: string, participants: string[]) => Promise<import("../index.js").GroupMetadata>;
     groupLeave: (id: string) => Promise<void>;
