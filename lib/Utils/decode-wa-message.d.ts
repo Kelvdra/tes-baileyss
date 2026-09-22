@@ -2,6 +2,18 @@ import type { WAMessage } from '../Types/index.js';
 import type { SignalRepositoryWithLIDStore } from '../Types/Signal.js';
 import { type BinaryNode } from '../WABinary/index.js';
 import type { ILogger } from './logger.js';
+export declare const extractNewsletterMessageMeta: (stanza: any) => {
+    adminProfile?: {
+        id: string | undefined;
+        name: string | undefined;
+        pictureId: string | undefined;
+        pictureDirectPath: string | undefined;
+    };
+    paidPartnership?: boolean;
+    aiContent?: boolean;
+    editTimestamp?: number;
+    originalTimestamp?: number;
+} | undefined;
 export declare const getDecryptionJid: (sender: string, repository: SignalRepositoryWithLIDStore) => Promise<string>;
 export declare const NO_MESSAGE_FOUND_ERROR_TEXT = "Message absent from node";
 export declare const MISSING_KEYS_ERROR_TEXT = "Key used already or never filled";

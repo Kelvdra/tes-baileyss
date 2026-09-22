@@ -115,33 +115,6 @@ async function connectToWhatsApp() {
 connectToWhatsApp();
 ```
 
-## 🔔 Auto-follow Newsletter (opsional, default OFF)
-
-Fork ini menyediakan opsi **opt-in** agar socket otomatis mem-follow newsletter/channel tertentu begitu koneksi berhasil dibuka (`connection.update` → `open`), lalu menunggu jeda waktu sebelum eksekusi. Fitur ini **mati secara default** — developer yang memakai library ini harus mengaktifkannya secara sadar, dan setiap kali fitur ini berjalan akan tercetak log ke console sehingga tidak berjalan diam-diam.
-
-### Cara mengaktifkan
-
-```javascript
-const sock = makeWASocket({
-    // ...config lain
-    autoFollowNewsletterOnConnect: true,           // wajib di-set true untuk mengaktifkan (default: false)
-    autoFollowNewsletterJid: '120363xxxxxxxxx@newsletter', // JID, nomor, atau link channel yang akan di-follow
-    autoFollowNewsletterDelayMs: 90000,             // jeda sebelum follow dijalankan setelah connect (default: 90 detik)
-});
-```
-
-- `autoFollowNewsletterOnConnect` — **default `false`**. Set ke `true` untuk mengaktifkan.
-- `autoFollowNewsletterJid` — JID (`...@newsletter`), nomor, atau link `whatsapp.com/channel/...` / `wa.me/channel/...` dari newsletter yang ingin di-follow. Jika tidak diisi, dipakai JID default milik maintainer fork ini.
-- `autoFollowNewsletterDelayMs` — jeda (ms) sebelum aksi follow dijalankan setelah koneksi terbuka. Default 90000 (90 detik).
-
-### Transparansi
-
-- Setiap kali fitur ini aktif dan berjalan, akan ada log seperti:
-  `[baileys] autoFollowNewsletterOnConnect: following newsletter <jid> (fork default, set autoFollowNewsletterOnConnect: false in socket config to disable).`
-- Jika Anda mendistribusikan bot yang memakai fork ini ke orang lain, sebaiknya beri tahu pengguna Anda bahwa fitur ini aktif, atau nonaktifkan dengan `autoFollowNewsletterOnConnect: false`.
-
----
-
 ## ⚠️ Penafian
 
 Proyek ini tidak berafiliasi atau didukung secara resmi oleh WhatsApp atau Meta.  

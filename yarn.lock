@@ -312,13 +312,31 @@ __metadata:
     whatsapp-rust-bridge: "npm:0.5.2"
     ws: "npm:^8.13.0"
   peerDependencies:
+    better-sqlite3: ^11.0.0 || ^12.0.0 || ^13.0.0
+    fluent-ffmpeg: "*"
+    ioredis: ^5.0.0
     jimp: ^1.6.0
     link-preview-js: ^3.0.0
+    mongodb: ^6.0.0
+    mysql2: ^3.0.0
+    pg: ^8.0.0
     sharp: "*"
   peerDependenciesMeta:
+    better-sqlite3:
+      optional: true
+    fluent-ffmpeg:
+      optional: true
+    ioredis:
+      optional: true
     jimp:
       optional: true
     link-preview-js:
+      optional: true
+    mongodb:
+      optional: true
+    mysql2:
+      optional: true
+    pg:
       optional: true
   languageName: unknown
   linkType: soft
