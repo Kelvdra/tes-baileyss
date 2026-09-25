@@ -30,7 +30,13 @@ export type PossiblyExtendedCacheStore = CacheStore & {
 export type PatchedMessageWithRecipientJID = proto.IMessage & {
     recipientJid?: string;
 };
+import type { HumanizeConfig } from '../Utils/humanizer.js';
+import type { JidResolverOptions } from '../Utils/jid-resolver.js';
 export type SocketConfig = {
+    /** jitter delay + presence composing sebelum sendMessage (anti-sequence). Default: mati */
+    humanize?: boolean | HumanizeConfig;
+    /** resolver LID -> JID (sock.getRealJid). Default: aktif; false untuk mematikan */
+    jidResolver?: boolean | JidResolverOptions;
     /** the WS url to connect to WA */
     waWebSocketUrl: string | URL;
     /** Fails the connection if the socket times out in this interval */

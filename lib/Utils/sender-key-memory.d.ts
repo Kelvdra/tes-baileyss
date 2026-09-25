@@ -1,4 +1,4 @@
-/* Elaina Baileys maintained distribution. Upstream notices and license are preserved in LICENSE and NOTICE.md. */
+/* @kelvdra/baileys distribution. */
 
 export declare function pickSenderKeyRecipients(
     devices: { jid?: string, device?: number }[],

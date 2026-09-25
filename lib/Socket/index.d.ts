@@ -1,4 +1,6 @@
 import type { UserFacingSocketConfig } from '../Types/index.js';
+import type { HumanizeConfig } from '../Utils/humanizer.js';
+import type { JidResolverMethods } from '../Utils/jid-resolver.js';
 import type { NewsletterStatusFetchOptions, NewsletterStatusList, NewsletterStatusSendOptions, NewsletterStatusSendResult, NewsletterStatusStanzaResult, NewsletterStatusUpdatesFetchOptions } from '../Utils/newsletter-status.js';
 declare const makeWASocket: (config: UserFacingSocketConfig) => {
     communityMetadata: (jid: string) => Promise<import("../index.js").GroupMetadata>;
@@ -157,15 +159,15 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
         canPostMusic: boolean;
         capabilities: string[];
     }>;
-    /** Added from Elaina Baileys: post a status update to a WhatsApp Channel (newsletter). */
+    /** Added from @kelvdra/baileys: post a status update to a WhatsApp Channel (newsletter). */
     sendNewsletterStatus: (jid: string, content: import("../index.js").AnyMessageContent, options?: NewsletterStatusSendOptions) => Promise<NewsletterStatusSendResult>;
-    /** Added from Elaina Baileys: react to (or, with no reaction, revoke your reaction to) a newsletter status. */
+    /** Added from @kelvdra/baileys: react to (or, with no reaction, revoke your reaction to) a newsletter status. */
     sendNewsletterStatusReaction: (jid: string, parentServerId: string | number, reaction: string, options?: Pick<NewsletterStatusSendOptions, 'messageId' | 'ackTimeoutMs'>) => Promise<NewsletterStatusStanzaResult>;
-    /** Added from Elaina Baileys: revoke (delete) a newsletter status you posted, as an admin. */
+    /** Added from @kelvdra/baileys: revoke (delete) a newsletter status you posted, as an admin. */
     revokeNewsletterStatus: (jid: string, statusId: string, options?: Pick<NewsletterStatusSendOptions, 'ackTimeoutMs'>) => Promise<NewsletterStatusStanzaResult>;
-    /** Added from Elaina Baileys: fetch statuses currently posted to a newsletter/channel. */
+    /** Added from @kelvdra/baileys: fetch statuses currently posted to a newsletter/channel. */
     getNewsletterStatuses: (jid: string, options?: NewsletterStatusFetchOptions) => Promise<NewsletterStatusList>;
-    /** Added from Elaina Baileys: fetch incremental newsletter status updates. */
+    /** Added from @kelvdra/baileys: fetch incremental newsletter status updates. */
     getNewsletterStatusUpdates: (jid: string, options?: NewsletterStatusUpdatesFetchOptions) => Promise<NewsletterStatusList>;
     groupMetadata: (jid: string) => Promise<import("../index.js").GroupMetadata>;
     groupCreate: (subject: string, participants: string[]) => Promise<import("../index.js").GroupMetadata>;
@@ -305,6 +307,8 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
     }[] | undefined>;
     fetchAccountReachoutTimelock: () => Promise<import("../index.js").ReachoutTimelockState>;
     fetchNewChatMessageCap: () => Promise<import("../index.js").NewChatMessageCapInfo>;
-};
+    /** ada bila config.humanize diaktifkan */
+    humanize?: Required<HumanizeConfig>;
+} & JidResolverMethods;
 export default makeWASocket;
 //# sourceMappingURL=index.d.ts.map

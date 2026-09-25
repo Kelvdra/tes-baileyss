@@ -1,4 +1,4 @@
-// Ditambahkan ke Kelvdra Baileys: diadaptasi dari Elaina Baileys.
+// Ditambahkan ke Kelvdra Baileys: diadaptasi dari @kelvdra/baileys.
 import { proto } from '../../WAProto/index.js'
 
 export type NewsletterStatusMediaType = 'audio' | 'gif' | 'image' | 'video'

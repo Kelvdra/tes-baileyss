@@ -1,5 +1,4 @@
-import type KeyedDB from '@adiwajshing/keyed-db'
-import type { Comparable } from '@adiwajshing/keyed-db/lib/Types'
+import type { Comparable, KeyedDB } from './keyed-db'
 import type { Logger } from 'pino'
 import { proto } from '../../WAProto'
 import type makeMDSocket from '../Socket'
@@ -24,6 +23,8 @@ export type BaileysInMemoryStoreConfig = {
     labelAssociationKey?: Comparable<LabelAssociation, string>
     logger?: Logger
     socket?: WASocket
+    /** batas pesan tersimpan per chat (default 500, 0 = tanpa batas) */
+    maxMessagesPerChat?: number
 }
 
 export declare const makeInMemoryStore: (config: BaileysInMemoryStoreConfig) => {
