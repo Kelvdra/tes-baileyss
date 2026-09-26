@@ -1,9 +1,11 @@
+![@kelvdra/baileys](./banner.svg)
+
 # 📘 Dokumentasi `@kelvdra/baileys`
 
 > Fork Baileys (WhiskeySockets) yang dimodifikasi oleh **Kelvdra**.
-> Versi paket: `1.0.5-rc.2` · Modul: **ESM** · Node.js **≥ 20** · Lisensi: MIT
+> Versi paket: `1.0.6` · Modul: **ESM** · Node.js **≥ 20** · Lisensi: MIT
 
-**Catatan tentang dokumen ini.** Isinya disusun dari pembacaan seluruh kode di `lib/`, ditambah uji offline (paket dipasang, di-`import`, socket dibuat, dan handler `hydra` dipanggil tanpa koneksi ke WhatsApp). Contoh yang mengirim pesan ke WhatsApp sungguhan **belum dijalankan**, jadi tampilan akhir di aplikasi WhatsApp bisa berbeda tergantung versi klien penerima. Hal yang saya temukan bermasalah ada di [Bagian 15](#15-masalah-yang-diketahui--saran-perbaikan) — **baca dulu bagian 2**, karena ada satu masalah yang membuat library gagal di-import.
+**Catatan tentang dokumen ini.** Isinya disusun dari pembacaan seluruh kode di `lib/`, ditambah uji offline (paket dipasang, di-`import`, socket dibuat, dan handler `hydra` dipanggil tanpa koneksi ke WhatsApp). Contoh yang mengirim pesan ke WhatsApp sungguhan **belum dijalankan**, jadi tampilan akhir di aplikasi WhatsApp bisa berbeda tergantung versi klien penerima. Dokumen ini sudah diperbarui setelah pengecekan ulang terhadap `package.json` dan `lib/` versi terbaru: masalah `chalk`/`axios` hilang dari `dependencies` dan `makeInMemoryStore` gagal di-`import` **sudah diperbaiki** (lihat [2.1](#21--chalk-dan-axios--sudah-diperbaiki) dan [15.2](#152--sudah-diperbaiki--makeinmemorystore-sekarang-berfungsi)). Masalah lain yang masih berlaku ada di [Bagian 15](#15-masalah-yang-diketahui--saran-perbaikan).
 
 ---
 
@@ -49,21 +51,11 @@ Selain itu seluruh API Baileys 7.x tetap tersedia (grup, komunitas, newsletter, 
 
 ## 2. Baca dulu: 3 hal penting sebelum memakai
 
-### 2.1 `chalk` dan `axios` belum ada di `dependencies` ⚠️
+### 2.1 ✅ `chalk` dan `axios` — sudah diperbaiki
 
-`lib/index.js` meng-import `chalk` dan `lib/Socket/hydra.js` meng-import `axios`, tetapi keduanya **tidak tercantum** di `package.json`. Saya sudah mencoba memasang paketnya dari nol, hasilnya:
+Di versi sebelumnya, `lib/index.js` meng-import `chalk` dan `lib/Socket/hydra.js` meng-import `axios` tanpa keduanya tercantum di `package.json`, sehingga `import '@kelvdra/baileys'` gagal dengan `ERR_MODULE_NOT_FOUND`.
 
-```
-ERR_MODULE_NOT_FOUND: Cannot find package 'chalk' imported from .../lib/index.js
-```
-
-Solusi cepat di project pengguna:
-
-```bash
-npm install chalk axios
-```
-
-Solusi permanen: tambahkan ke `dependencies` di `package.json` library ini (lihat [15.1](#151-tambahkan-dependensi-yang-hilang)).
+**Sudah diperbaiki di versi ini** — `package.json` sekarang mencantumkan `"chalk": "^5.3.0"` dan `"axios": "^1.13.6"` di `dependencies`, jadi tidak perlu install manual lagi. `npm install @kelvdra/baileys` saja sudah cukup untuk dua paket ini.
 
 ### 2.2 `printQRInTerminal` sudah tidak berfungsi
 
@@ -1299,23 +1291,17 @@ sock.ev.on('messages.upsert', async ({ messages, type }) => {
 
 Semua poin di bawah ditemukan dari pembacaan kode dan uji offline. Yang bertanda ✅ sudah saya buktikan dengan menjalankan kodenya; sisanya berdasarkan pembacaan.
 
-### 15.1 Tambahkan dependensi yang hilang
+### 15.1 ✅ SUDAH DIPERBAIKI — dependensi yang tadinya hilang
 
-✅ `chalk` (dipakai `lib/index.js`) dan `axios` (dipakai `lib/Socket/hydra.js`) belum ada di `dependencies`; tanpa `chalk`, `import '@kelvdra/baileys'` langsung gagal.
+`chalk` dan `axios` sekarang sudah ada di `dependencies` pada `package.json` versi ini. Lihat [2.1](#21--chalk-dan-axios--sudah-diperbaiki).
 
-```json
-"dependencies": {
-  "axios": "^1.7.0",
-  "chalk": "^5.3.0",
-  "…": "…"
-}
-```
+Masih relevan untuk dipertimbangkan: membuat banner di `lib/index.js` opsional (mis. hanya tampil bila `process.env.KELVDRA_BANNER !== '0'`), karena saat ini selalu tercetak setiap kali library di-`import`.
 
-Sekalian pertimbangkan membuat banner di `lib/index.js` opsional (mis. hanya tampil bila `process.env.KELVDRA_BANNER !== '0'`), karena sekarang selalu tercetak setiap import.
+### 15.2 ✅ SUDAH DIPERBAIKI — `makeInMemoryStore` sekarang berfungsi
 
-### 15.2 `makeInMemoryStore` tidak berfungsi
+Sebelumnya `Store/make-in-memory-store.js` memakai `require('@adiwajshing/keyed-db')` di dalam modul ESM (→ `ReferenceError: require is not defined`) dan bergantung pada paket eksternal yang tidak ada di `dependencies`.
 
-✅ `Store/make-in-memory-store.js` memakai `require('@adiwajshing/keyed-db')` dalam modul ESM (→ `ReferenceError: require is not defined`), paket itu tidak ada di `dependencies`, dan `Defaults_1` tidak terdefinisi bila `config.logger` tidak diberikan. Perbaikan: ganti dengan `import KeyedDB from '@adiwajshing/keyed-db'`, ganti `Defaults_1.` menjadi `Defaults.`, dan tambahkan paketnya ke `dependencies`. Sampai itu diperbaiki, pakai cache sendiri ([13.3](#133-store-pesan)).
+**Di versi ini sudah diganti** menjadi `import { KeyedDB } from './keyed-db.js'` — implementasi `keyed-db` sekarang dibundel langsung di dalam `lib/Store/`, jadi tidak lagi bergantung pada paket luar dan tidak akan gagal di-`import`. `makeInMemoryStore` bisa dipakai langsung tanpa workaround.
 
 ### 15.3 Handler yang tidak ter-route
 
@@ -1376,6 +1362,28 @@ Metadata "diteruskan dari channel" atau info bisnis yang tidak sesuai kenyataan 
 - **`interactiveButtons` + media:** implementasi menempelkan objek media ke dalam `interactiveMessage` dan ke `header` dengan `Object.assign`. Cara ini lazim di banyak fork, tetapi sebaiknya diuji di perangkat penerima.
 - **`README.md`** memakai `printQRInTerminal: true` yang sudah tidak berfungsi ([2.2](#22-printqrinterminal-sudah-tidak-berfungsi)).
 - **`package.json`**: `homepage` dan `repository` masih menunjuk ke `WhiskeySockets/Baileys`.
+
+### 15.8 `catch {}` kosong di jalur auth state
+
+Beberapa `catch` di jalur baca/tulis auth state tidak melakukan apa-apa, sehingga kegagalan baca/tulis sesi tidak pernah muncul di log:
+
+- `useMultiFileAuthState` (`readData`, `removeData`) dan `useNekoDBAuth` (`readData`, `removeData`, `clearAuth`) sekarang menerima parameter `logger` opsional (default: logger internal Baileys) dan akan `logger.warn(...)` bila terjadi error nyata. Untuk `readData` di `useMultiFileAuthState`, error `ENOENT` (file memang belum ada, mis. login pertama) sengaja tidak dianggap sebagai kegagalan dan tidak di-log — hanya error lain (file corrupt, permission, dsb.) yang dicatat.
+- `socket.js` (penutupan WebSocket saat koneksi berakhir) sekarang juga mencatat `logger.warn` bila `ws.close()` gagal, alih-alih diam.
+- Ini bukan seluruh empty-catch di repo — sisanya ada di kode VoIP (`lib/VoIP/*`) yang authored terpisah, dan di dua file vendor (`lib/assets/wasm/worker-modules.js`, `loader.js`) yang merupakan bundle minified WhatsApp Web sendiri untuk WASM VoIP, bukan kode yang ditulis di repo ini.
+
+Kalau pakai versi lama fork ini, cukup teruskan `logger` yang sama dengan yang dipakai `makeWASocket({ logger })` ke `useMultiFileAuthState(folder, logger)` / `useNekoDBAuth(db, collectionName, logger)` untuk dapat log ini.
+
+### 15.9 `rich-messages.js`: V1 vs V2 tidak terdokumentasi
+
+`generateTableContent`/`V2`, `generateCodeBlockContent`/`V2`, `generateLinkContent`/`V2`, dan `tokenizeCode`/`V2` sengaja dibuat paralel (keduanya dipakai, bukan dead code — kecuali `sendTable` yang **tidak** di-expose di `sock`, hanya `sendTableV2`), tapi sebelumnya tidak ada komentar/README yang menjelaskan bedanya. Sekarang sudah ditambahkan JSDoc di `rich-messages.js`/`.d.ts`; ringkasnya:
+
+| | V1 (`generateXContent`) | V2 (`generateXContentV2`) |
+|---|---|---|
+| Format payload | `richResponseMessage.submessages` klasik (`messageType` 2/4/5, `tableMetadata`/`codeMetadata`) | `richResponseMessage.unifiedResponse.data`: JSON `sections` ber-`GenAI*UXPrimitive` yang di-base64 |
+| Bot JID yang dipakai | `867051314767696@bot` | `259786046210223@bot` |
+| Expose di `sock` | `sendCodeBlock`, `sendLink` (⚠️ `sendTable` **tidak ada**) | `sendTableV2`, `sendCodeBlockV2`, `sendLinkV2` |
+
+Karena rendering di sisi client WhatsApp bisa berbeda tergantung versi app/persona bot yang ditiru, kalau salah satu tidak tampil dengan benar di device tujuan, coba versi satunya.
 
 ---
 
