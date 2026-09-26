@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
   id-token: write
 
 jobs:
@@ -15,23 +14,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
-          scope: '@kelvdra'
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
 
       - name: Enable Corepack
         run: corepack enable
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
-      # 👉 Publish to npmjs.org (tanpa provenance, supaya repo private tetap bisa)
-      - name: Publish to npmjs.org
-        run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
-          npm publish --registry=https://registry.npmjs.org/
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Check package contents
+        run: npm pack --dry-run
+
+      - name: Publish to npm
+        run: npm publish --access public
