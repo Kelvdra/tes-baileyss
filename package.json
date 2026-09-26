@@ -1,0 +1,98 @@
+{
+  "name": "@kelvdra/baileys",
+  "type": "module",
+  "version": "1.0.6",
+  "description": "Baileys fork whiskeysockets modified by kelvdra.",
+  "keywords": [
+    "baileys",
+    "baileys-mod",
+    "bails",
+    "whiskeysockets/baileys",
+    "whatsapp",
+    "meta",
+    "Hydra",
+    "Kelvdra",
+    "whatsapp",
+    "js-whatsapp",
+    "whatsapp-api",
+    "whatsapp-web",
+    "whatsapp-chat",
+    "whatsapp-group",
+    "automation",
+    "multi-device",
+    "modder"
+  ],
+  "homepage": "https://github.com/WhiskeySockets/Baileys/",
+  "repository": {
+    "url": "git@github.com:WhiskeySockets/Baileys.git"
+  },
+  "license": "MIT",
+  "author": "Kelvdra",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*.js",
+    "lib/**/*.d.ts",
+    "lib/**/*.json",
+    "WAProto/**/*",
+    "engine-requirements.js"
+  ],
+  "dependencies": {
+    "@cacheable/node-cache": "^1.4.0",
+    "@hapi/boom": "^9.1.3",
+    "async-mutex": "^0.5.0",
+    "axios": "^1.13.6",
+    "cache-manager": "^5.7.6",
+    "chalk": "^5.3.0",
+    "fflate": "^0.8.2",
+    "libsignal": "github:Kelvdra/libsignal",
+    "lru-cache": "^11.1.0",
+    "music-metadata": "^11.7.0",
+    "p-queue": "^9.0.0",
+    "pino": "^9.6",
+    "protobufjs": "^7.5.6",
+    "whatsapp-rust-bridge": "0.5.2",
+    "ws": "^8.13.0"
+  },
+  "peerDependencies": {
+    "better-sqlite3": "^11.0.0 || ^12.0.0 || ^13.0.0",
+    "fluent-ffmpeg": "*",
+    "ioredis": "^5.0.0",
+    "jimp": "^1.6.0",
+    "link-preview-js": "^3.0.0",
+    "mongodb": "^6.0.0",
+    "mysql2": "^3.0.0",
+    "pg": "^8.0.0",
+    "sharp": "*"
+  },
+  "peerDependenciesMeta": {
+    "better-sqlite3": {
+      "optional": true
+    },
+    "fluent-ffmpeg": {
+      "optional": true
+    },
+    "ioredis": {
+      "optional": true
+    },
+    "jimp": {
+      "optional": true
+    },
+    "link-preview-js": {
+      "optional": true
+    },
+    "mongodb": {
+      "optional": true
+    },
+    "mysql2": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    }
+  },
+  "packageManager": "yarn@4.9.2",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
