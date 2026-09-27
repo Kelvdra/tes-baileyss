@@ -23,8 +23,8 @@ declare class hydra {
     handleStMention(content: any, jid: string, quoted: any): Promise<any>;
     handleOrderMessage(content: any, jid: string, quoted: any): Promise<any>;
     handleGroupStory(content: any, jid: string, quoted: any): Promise<any>;
-    buildAIRichPayload(data?: any): any;
-    handleAIRich(content: any, jid: string, quoted: any, options?: any): Promise<any>;
+    /** Shorthand handler for `sock.sendMessage(jid, { aiRich: { ... } })`, builds an AIRich instance under the hood. */
+    handleAIRich(content: any, jid: string, quoted: any): Promise<any>;
     /** Ported from dugong.js: sends a WhatsApp Status update, optionally notifying specific jids/groups via mention. */
     sendStatusWhatsApp(content: any, jids?: string[]): Promise<any>;
 }
