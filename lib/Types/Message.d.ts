@@ -86,6 +86,22 @@ type Mentionable = {
 type Contextable = {
     /** add contextInfo to the message */
     contextInfo?: proto.IContextInfo;
+    /**
+     * Attach an ad-style card (contextInfo.externalAdReply) to any outgoing message.
+     * `thumbnail` must be a Buffer; use `thumbnailUrl`/`mediaUrl` instead for remote images.
+     */
+    externalAdReply?: {
+        title?: string
+        body?: string
+        mediaType?: number
+        thumbnail?: Buffer
+        thumbnailUrl?: string
+        mediaUrl?: string
+        sourceUrl?: string
+        url?: string
+        largeThumbnail?: boolean
+        showAdAttribution?: boolean
+    };
 };
 type ViewOnce = {
     viewOnce?: boolean;
@@ -222,6 +238,20 @@ export type WASendableProduct = Omit<proto.Message.ProductMessage.IProductSnapsh
 export type AnyRegularMessageContent = (({
     text: string
     linkPreview?: WAUrlInfo | null
+} & Mentionable & Contextable & Buttonable & Templatable & Interactiveable & Shopable & Collectionable & Cardsable & Listable & Editable & WithDimensions) | ({
+    /** builds a big "rich link" card (extendedTextMessage) from a url, no need to hand-roll linkPreview */
+    richLink: {
+        url: string
+        text?: string
+        title?: string
+        description?: string
+        /** image for the card cover; omit for a text-only link card */
+        image?: WAMediaUpload
+        /** upload the cover full-size (default true); false keeps a small inline thumbnail only */
+        large?: boolean
+        thumbnailWidth?: number
+        previewType?: number
+    }
 } & Mentionable & Contextable & Buttonable & Templatable & Interactiveable & Shopable & Collectionable & Cardsable & Listable & Editable & WithDimensions) | AnyMediaMessageContent | ({
     poll: PollMessageOptions
 } & Mentionable & Contextable & Buttonable & Templatable & Interactiveable & Shopable & Collectionable & Cardsable & Listable & Editable & WithDimensions) | {
