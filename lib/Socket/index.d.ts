@@ -1,6 +1,8 @@
 import type { UserFacingSocketConfig } from '../Types/index.js';
 import type { HumanizeConfig } from '../Utils/humanizer.js';
 import type { JidResolverMethods } from '../Utils/jid-resolver.js';
+import type { CustomPresenceMethods, CustomPresenceOptions } from '../Utils/custom-presence.js';
+import type { MmgMethods, SendImageHd } from '../Utils/mmg.js';
 import type { NewsletterStatusFetchOptions, NewsletterStatusList, NewsletterStatusSendOptions, NewsletterStatusSendResult, NewsletterStatusStanzaResult, NewsletterStatusUpdatesFetchOptions } from '../Utils/newsletter-status.js';
 declare const makeWASocket: (config: UserFacingSocketConfig) => {
     communityMetadata: (jid: string) => Promise<import("../index.js").GroupMetadata>;
@@ -324,6 +326,10 @@ declare const makeWASocket: (config: UserFacingSocketConfig) => {
     fetchNewChatMessageCap: () => Promise<import("../index.js").NewChatMessageCapInfo>;
     /** ada bila config.humanize diaktifkan */
     humanize?: Required<HumanizeConfig>;
-} & JidResolverMethods;
+    /** sendPresenceUpdate dengan argumen ketiga opsional (durasi, steps, repeat, dst) */
+    sendPresenceUpdate: (type: import("../index.js").WAPresence, toJid?: string, options?: Omit<CustomPresenceOptions, 'type'>) => Promise<any>;
+    /** kirim gambar dengan thumbnail beresolusi lebih tinggi, dimensi asli, dan mimetype terdeteksi */
+    sendImageHd: SendImageHd;
+} & JidResolverMethods & CustomPresenceMethods & MmgMethods;
 export default makeWASocket;
 //# sourceMappingURL=index.d.ts.map

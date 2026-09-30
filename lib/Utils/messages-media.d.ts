@@ -14,7 +14,7 @@ export declare const getRawMediaUploadData: (media: WAMediaUpload, mediaType: Me
 }>;
 /** generates all the keys required to encrypt/decrypt & sign a media message */
 export declare function getMediaKeys(buffer: Uint8Array | string | null | undefined, mediaType: MediaType): Promise<MediaDecryptionKeyInfo>;
-export declare const extractImageThumb: (bufferOrFilePath: Readable | Buffer | string, width?: number) => Promise<{
+export declare const extractImageThumb: (bufferOrFilePath: Readable | Buffer | string, width?: number, quality?: number) => Promise<{
     buffer: any;
     original: {
         width: any;

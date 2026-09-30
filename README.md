@@ -992,6 +992,77 @@ Ringkasan seluruh method `sock.kelvdra`:
 | `handleStMention` | Status mention (versi lama) | ❌ **rusak**, pakai `sendStatusMentions` |
 | `handleStickerPack` | Sticker pack | ❌ **rusak**, pakai `stickerPack` |
 
+### 11.13 Custom Presence, MMG High-Res, dan Anti-Delay Upload
+
+Tiga fitur tambahan. Semuanya aktif tanpa konfigurasi; perilaku lama tidak berubah.
+
+#### Custom Presence
+
+`sock.sendPresenceUpdate(type, jid)` tetap bekerja seperti biasa. Argumen ketiga (opsional) membuka opsi durasi dan urutan state:
+
+```js
+// Rekam voice note selama 3 detik, lalu otomatis paused
+await sock.sendPresenceUpdate('recording', jid, { duration: 3000 })
+
+// Urutan: merekam 2 detik, lalu mengetik. Durasi mengetik dihitung dari panjang teks
+await sock.sendCustomPresence(jid, {
+  steps: [
+    { type: 'recording', duration: 2000 },
+    { type: 'composing', text: 'halo kak, sebentar ya' }
+  ],
+  repeat: 1,          // ulangi seluruh steps
+  finish: 'paused'    // 'paused' (default) | 'none'
+})
+
+// Jalan di background, hentikan kapan saja
+const h = await sock.sendCustomPresence(jid, { type: 'composing', duration: 30000, wait: false })
+await h.stop()          // atau: await sock.stopPresence(jid)
+```
+
+State yang ditahan lama dikirim ulang tiap 7 detik (`customPresence: { refreshEvery }`), dan sesi baru di chat yang sama menggantikan sesi lama tanpa mengirim `paused`.
+
+**Batasan protokol:** WhatsApp hanya punya tiga state chat (`composing`, `recording`, `paused`). Tulisan "sedang mengetik..." / "merekam audio..." dirender oleh aplikasi penerima, jadi **teks label kustom tidak bisa dikirim**. Opsi `text` hanya dipakai untuk menghitung durasi mengetik yang wajar.
+
+#### MMG High-Res
+
+```js
+// URL mmg.whatsapp.net dari sumber apa pun. Kalau sudah ada di server WA, tidak ada upload sama sekali
+const url = await sock.getMmgUrl(buffer)                       // Buffer / path / URL / base64 / { url }
+const same = await sock.getMmgUrl('/v/t62.7118-24/abc?oe=1')  // directPath -> URL, tanpa upload
+const fromMsg = sock.toMmgUrl(m.message)                       // versi sinkron, dari pesan / objek media
+
+// Bentuk yang dipakai builder: preview dan high-res otomatis sama-sama HD
+const { imagePreviewUrl, imageHighResUrl, sourceUrl } = await sock.getMmgImageUrls(buffer)
+const list = await sock.getMmgImageUrls([bufA, bufB])          // array -> array
+
+// Kirim gambar HD
+await sock.sendImageHd(jid, buffer, 'caption')
+await sock.sendImageHd(jid, { url: 'https://…/foto.png' }, { caption: 'halo', viewOnce: true }, { quoted: m })
+```
+
+- Konten yang sama hanya di-upload sekali (cache berdasarkan SHA-256, 30 menit). `Toolkit.resolveMedia` di `MessageBuilder` (AIRich `addImage`, dll.) otomatis memakai cache ini.
+- `sendImageHd(jid, image, content?, options?)` mengikuti pola `sendMessage`. `content` boleh string (jadi caption). Ia mengirim byte asli tanpa kompresi, mengisi `width`/`height` asli, mendeteksi mimetype (jpeg/png/webp/gif), dan membuat thumbnail inline lebih tajam (default 256px, kualitas 75; ubah lewat `thumbWidth` / `thumbQuality` di `content` atau `imageHd: {}` di config).
+- URL hasil `getMmgUrl` berasal dari jalur upload mentah (tanpa enkripsi), jadi cocok untuk `imagePreviewUrl` / `imageHighResUrl`. URL media chat biasa hanya dinormalisasi, isinya tetap terenkripsi.
+
+#### Anti-Delay Upload
+
+`waUploadToServer` sekarang dibungkus: hasil upload di-cache, upload identik yang berjalan bersamaan digabung, gagal di semua host akan di-retry dengan exponential backoff (dan `media_conn` dipaksa refresh sebelum mencoba lagi), dan `media_conn` diambil di muka saat koneksi `open`.
+
+```js
+const sock = makeWASocket({
+  uploadCache: { retries: 3, retryDelay: 400, retryMaxDelay: 4000, cacheTtl: 30 * 60_000, cacheMax: 500, prewarm: true }
+  // uploadCache: false  -> matikan
+})
+sock.waUploadToServer.stats        // { hit, miss, deduped, retried, failed }
+sock.waUploadToServer.clearCache()
+```
+
+Sekalian diperbaiki: sebelumnya kalau query `media_conn` pertama gagal, promise yang gagal itu menetap dan semua upload berikutnya ikut error sampai socket dibuat ulang. Sekarang state tersebut dibersihkan otomatis.
+
+Catatan: media chat biasa dienkripsi dengan `mediaKey` acak, jadi kirim ulang gambar yang sama ke chat lain tetap upload ulang. Cache paling terasa untuk jalur upload mentah (`getMmgUrl`, AIRich, newsletter) dan untuk retry/kirim bersamaan.
+
+Unit test: `node --test test/features.test.js` (butuh `npm install` dulu).
+
 ---
 
 ## 12. API socket lainnya

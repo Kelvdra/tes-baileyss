@@ -42,4 +42,7 @@ export * from './useNekoDBAuth.js';
 export * from './username.js';
 export * from './voice-recognition.js';
 export * from './function-explorer.js';
+export * from './upload-cache.js';
+export * from './mmg.js';
+export * from './custom-presence.js';
 //# sourceMappingURL=index.d.ts.map

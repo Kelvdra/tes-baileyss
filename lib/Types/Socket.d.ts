@@ -32,11 +32,22 @@ export type PatchedMessageWithRecipientJID = proto.IMessage & {
 };
 import type { HumanizeConfig } from '../Utils/humanizer.js';
 import type { JidResolverOptions } from '../Utils/jid-resolver.js';
+import type { UploadCacheConfig } from '../Utils/upload-cache.js';
+import type { MmgConfig, ImageHdConfig } from '../Utils/mmg.js';
+import type { CustomPresenceConfig } from '../Utils/custom-presence.js';
 export type SocketConfig = {
     /** jitter delay + presence composing sebelum sendMessage (anti-sequence). Default: mati */
     humanize?: boolean | HumanizeConfig;
     /** resolver LID -> JID (sock.getRealJid). Default: aktif; false untuk mematikan */
     jidResolver?: boolean | JidResolverOptions;
+    /** cache + retry + pre-warm untuk waUploadToServer. Default: aktif; false untuk mematikan */
+    uploadCache?: boolean | UploadCacheConfig;
+    /** cache getMmgUrl / getMmgImageUrls */
+    mmg?: MmgConfig;
+    /** default thumbnail sendImageHd */
+    imageHd?: ImageHdConfig;
+    /** default sendCustomPresence */
+    customPresence?: CustomPresenceConfig;
     /** the WS url to connect to WA */
     waWebSocketUrl: string | URL;
     /** Fails the connection if the socket times out in this interval */
