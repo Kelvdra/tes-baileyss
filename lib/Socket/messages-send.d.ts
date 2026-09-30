@@ -26,6 +26,23 @@ export declare const makeMessagesSocket: (config: SocketConfig) => {
     })[]>;
     messageRetryManager: MessageRetryManager | null;
     updateMediaMessage: (message: WAMessage) => Promise<WAMessage>;
+    sendHTML: (jid: string, html: string | Buffer, options?: {
+        /** Teks fallback gelembung chat (default: title) */
+        text?: string;
+        /** Judul (mode screen: judul gelembung + layar). Default 'HTML' */
+        title?: string;
+        /** true = gelembung "klik" yang membuka layar HTML. Default false (tampil langsung) */
+        screen?: boolean;
+        /** Nama tab pada mode screen. Default 'HTML' */
+        tabHeader?: string;
+        trustedSources?: string[];
+        url?: string;
+        /** Default true */
+        notification?: boolean;
+        quoted?: WAMessage;
+        messageId?: string;
+        [key: string]: any;
+    }) => Promise<any>;
     sendMessage: (jid: string, content: AnyMessageContent, options?: MiscMessageGenerationOptions) => Promise<WAMessage | undefined>;
     newsletterCreate: (name: string, description?: string) => Promise<import("../Types/index.js").NewsletterMetadata>;
     newsletterUpdate: (jid: string, updates: import("../Types/index.js").NewsletterUpdate) => Promise<unknown>;

@@ -168,6 +168,33 @@ type Interactiveable = {
    subtitle?: string
    footer?: string
    hasMediaAttachment?: boolean
+   /** native flow buttons; each item is a shortcut ({ text, id | copy | url | call | sections }) or a raw { name, buttonParamsJson } */
+   nativeFlow?: (NativeFlowShortcutButton | proto.Message.InteractiveMessage.NativeFlowMessage.INativeFlowButton)[] | { buttons: (NativeFlowShortcutButton | proto.Message.InteractiveMessage.NativeFlowMessage.INativeFlowButton)[] }
+   /** label of the button that opens the bottom sheet listing the nativeFlow buttons */
+   optionText?: string
+   /** heading shown inside that bottom sheet */
+   optionTitle?: string
+   /** limited time offer banner */
+   offerText?: string
+   offerUrl?: string
+   offerCode?: string
+   offerExpiration?: number
+   /** overrides nativeFlowMessage.name (default 'mixed') */
+   flowName?: string
+   /** A2UI / Bloks card. Keep `fallback` byte-identical to `text` */
+   bloksWidget?: proto.Message.InteractiveMessage.IBloksWidget | { type: string, uuid?: string, fallback?: string, data?: string }
+}
+
+type NativeFlowShortcutButton = {
+   text?: string
+   buttonText?: string
+   icon?: string
+   id?: string
+   copy?: string
+   url?: string
+   useWebview?: boolean
+   call?: string
+   sections?: { title?: string, rows?: { title?: string, description?: string, id?: string }[] }[]
 }
 
 type Shopable = {
