@@ -207,4 +207,15 @@ export declare const MessageBuilder: Readonly<{
   ContentValidationError: typeof ContentValidationError;
 }>;
 
-export declare const MB: typeof MessageBuilder;
+/**
+ * MessageBuilder / MB also carry every helper exported from ./extras, ./metaai, ./bot-signature
+ * and Utils/native-flow (sendA2UI, a2uiText, a2uiImage, a2uiColumn, sendBloksWidget, ...).
+ * They are attached at runtime from lib/index.js.
+ */
+export type MessageBuilderWithHelpers = typeof MessageBuilder
+    & typeof import('./extras.js')
+    & typeof import('./metaai.js')
+    & typeof import('./bot-signature.js')
+    & typeof import('../Utils/native-flow.js');
+
+export declare const MB: MessageBuilderWithHelpers;
