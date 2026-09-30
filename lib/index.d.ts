@@ -13,6 +13,13 @@ export { MessageBuilder as KelvdraMessageBuilder, MessageBuilder as ElainaMessag
 export * from './MessageBuilder/extras.js';
 export * from './MessageBuilder/metaai.js';
 export * from './MessageBuilder/bot-signature.js';
+export { VoipClient, ActiveCall, CallState, makeVoipClient, VideoFeeder, AudioFeeder, VIDEO_FORMAT_I420 } from './VoIP/index.js';
+export type {
+    VoipClientOptions,
+    VoipCallOptions,
+    VoipGroupCallOptions,
+    VoipCallInvite
+} from './VoIP/index.js';
 export type WASocket = ReturnType<typeof makeWASocket>;
 export { makeWASocket };
 export default makeWASocket;

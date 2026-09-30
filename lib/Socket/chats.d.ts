@@ -6,6 +6,21 @@ import type { LabelActionBody } from '../Types/Label.js';
 import { type BinaryNode } from '../WABinary/index.js';
 import { USyncQuery } from '../WAUSync/index.js';
 export declare const makeChatsSocket: (config: SocketConfig) => {
+    checkAccountHealth: (jid: string) => Promise<{
+        jid: string;
+        exists: boolean;
+        isBusiness: boolean;
+        verifiedName: string | null;
+        about: string | null;
+        hasProfilePhoto: boolean;
+        self: {
+            capped: boolean;
+            warned: boolean;
+            unlimited: boolean;
+            remaining: number | null;
+        } | null;
+        notes: string[];
+    }>;
     serverProps: {
         /** AB prop 10518: gate tctoken on 1:1 messages. Default true (safe: avoids 463). */
         privacyTokenOn1to1: boolean;

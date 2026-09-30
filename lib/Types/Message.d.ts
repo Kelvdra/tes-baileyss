@@ -106,6 +106,50 @@ type Contextable = {
 type ViewOnce = {
     viewOnce?: boolean;
 };
+export type MessageMusic = {
+    /** audio sendiri (url/Buffer). Foto akan digabung dengan audio ini menjadi video */
+    audio?: WAMediaUpload
+    /** ID lagu di katalog musik WhatsApp (wajib jika tanpa `audio`) */
+    songId?: string
+    /** ID media konten musik di WhatsApp (wajib jika tanpa `audio`) */
+    musicContentMediaId?: string
+    title?: string
+    author?: string
+    artworkDirectPath?: string
+    /** base64 string atau Buffer */
+    artworkSha256?: string | Uint8Array
+    artworkEncSha256?: string | Uint8Array
+    artworkMediaKey?: string | Uint8Array
+    countryBlocklist?: string | Uint8Array
+    artistAttribution?: string
+    isExplicit?: boolean
+    /** mulai dari detik ke berapa di lagu (ms), default 0 */
+    musicSongStartTimeInMs?: number | string
+    startTimeMs?: number
+    derivedContentStartTimeInMs?: number | string
+    /** durasi potongan lagu (ms), default 30000 */
+    overlapDurationInMs?: number | string
+    durationMs?: number
+    /** posisi stiker musik di media, skala 0..1 (default tengah) */
+    x?: number
+    y?: number
+    width?: number
+    height?: number
+}
+type Musicable = {
+    /** tempel stiker musik pada image / video */
+    music?: MessageMusic
+}
+type ViewOnceExt = {
+    /** bungkus di viewOnceMessageV2 */
+    viewOnceV2?: boolean;
+    /** bungkus di viewOnceMessageV2Extension (bentuk yang dipakai klien untuk view once teks) */
+    viewOnceV2Extension?: boolean;
+};
+type SecureMetaServiceLabelable = {
+    /** tampilkan label "This business uses a secure service from Meta to manage this chat" (node <biz> di stanza) */
+    secureMetaServiceLabel?: boolean
+}
 type Buttonable = {
     /** add buttons to the message  */
     buttons?: proto.Message.ButtonsMessage.IButton[]
@@ -296,7 +340,7 @@ export type AnyRegularMessageContent = (({
     footer?: string
 } | {
     stickerPack: StickerPack
-} | SharePhoneNumber | RequestPhoneNumber) & ViewOnce & ViewOnceExt
+} | SharePhoneNumber | RequestPhoneNumber) & ViewOnce & ViewOnceExt & Musicable & SecureMetaServiceLabelable
 export type AnyMessageContent = AnyRegularMessageContent | {
     forward: WAMessage;
     force?: boolean;

@@ -105,6 +105,21 @@ export declare const makeBusinessSocket: (config: SocketConfig) => {
     groupFetchAllParticipating: () => Promise<{
         [_: string]: import("../index.js").GroupMetadata;
     }>;
+    checkAccountHealth: (jid: string) => Promise<{
+        jid: string;
+        exists: boolean;
+        isBusiness: boolean;
+        verifiedName: string | null;
+        about: string | null;
+        hasProfilePhoto: boolean;
+        self: {
+            capped: boolean;
+            warned: boolean;
+            unlimited: boolean;
+            remaining: number | null;
+        } | null;
+        notes: string[];
+    }>;
     serverProps: {
         privacyTokenOn1to1: boolean;
         profilePicPrivacyToken: boolean;

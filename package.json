@@ -20,7 +20,8 @@
     "whatsapp-group",
     "automation",
     "multi-device",
-    "modder"
+    "modder",
+    "banner.svg"
   ],
   "homepage": "https://github.com/WhiskeySockets/Baileys/",
   "repository": {
